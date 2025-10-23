@@ -42,8 +42,15 @@ conda activate whisperxtranscription-env
 ```
 
 2. Install PyTorch https://pytorch.org/get-started/locally/ 
+
+**For Windows/Linux with NVIDIA GPU:**
 ```sh
 pip install numpy==1.26.3 torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 --index-url https://download.pytorch.org/whl/cu121
+```
+
+**For Mac (CPU-only):**
+```sh
+pip install numpy==1.26.3 torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0
 ```
 
 3. Install WhisperX repository and additional packages
@@ -61,8 +68,10 @@ https://code.visualstudio.com/docs/datascience/jupyter-kernel-management
 ```sh
 HF_TOKEN="REPLACEWITHHUGGINGFACETOKENHERE"
 ```
-### C. To Set Up NVIDIA GPU
+### C. Platform-Specific Setup
 =================================================
+
+#### For Windows/Linux with NVIDIA GPU:
 1. Install Visual Studio Community https://visualstudio.microsoft.com/downloads/
 2. Install NVIDIA CUDA Toolkit 12.1 https://developer.nvidia.com/cuda-12-1-0-download-archive 
 
@@ -73,6 +82,24 @@ print(torch.__version__)
 print(torch.cuda.is_available())
 print(torch.cuda.get_device_name(0))
 ```
+
+#### For Mac (CPU-only):
+Mac computers don't support CUDA, so you'll need to install PyTorch with CPU support instead. Follow these steps:
+
+1. **Install PyTorch for CPU (Mac)**
+```sh
+pip install numpy==1.26.3 torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0
+```
+
+2. **Verify PyTorch installation on Mac**
+```sh
+import torch
+print(torch.__version__)
+print(torch.cuda.is_available())  # This will return False on Mac
+print("PyTorch is running on:", "CPU" if not torch.cuda.is_available() else "GPU")
+```
+
+**Note for Mac users:** The transcription will run on CPU, which will be slower than GPU processing but will work perfectly fine for most use cases. Processing times will depend on your Mac's CPU performance and the length of your audio files.
 
 ### D. Setup and Run Jupyter Notebook
 =================================================
