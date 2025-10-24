@@ -140,3 +140,56 @@ The transcripts will be saved in the specified output directory in multiple form
 
 ## Conclusion
 This code is designed to make it easy to process and transcribe large batches of audio or video files while ensuring anonymity through pseudonymization. Happy transcribing!# WhisperXTranscription4Researchers
+
+## macOS Quick Start (short)
+
+If you're running on macOS (Intel or Apple Silicon), here's a compact set of steps that are known to work and are easy to follow.
+
+1. Install Homebrew (if needed): https://brew.sh/
+
+```sh
+brew install ffmpeg
+```
+
+2. Create and activate a Python virtual environment (recommended):
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+python3 -m pip install --upgrade pip
+```
+
+3. Install PyTorch:
+
+- CPU-only (works on any macOS):
+
+```sh
+python3 -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+```
+
+- Apple Silicon (MPS): visit https://pytorch.org/get-started/locally/ and choose the options for macOS + pip to get the exact recommended command for your system — that command will install a wheel that enables MPS where available.
+
+4. Install WhisperX and other dependencies:
+
+```sh
+python3 -m pip install whisperx==3.2.0
+python3 -m pip install speechbrain ipykernel ipywidgets charset-normalizer pandas nltk plotly matplotlib webvtt-py pypi-json srt python-dotenv tqdm
+```
+
+5. Add your Hugging Face token to a `.env` file next to the notebook:
+
+```ini
+HF_TOKEN="REPLACEWITHHUGGINGFACETOKENHERE"
+```
+
+6. Verify installation / device availability:
+
+```sh
+python3 -c "import torch; print(torch.__version__); print('MPS', getattr(torch.backends,'mps',None) is not None and torch.backends.mps.is_available()); print('CUDA', torch.cuda.is_available())"
+```
+
+Notes:
+- MPS on Apple Silicon is not identical to CUDA — some operations and behavior differ. If you get errors from WhisperX or pyannote, paste the traceback and I can help pin versions.
+- After installing or changing packages, restart the Jupyter kernel before re-running the notebook.
+
+If you'd like, I can also create a `requirements.txt` or `environment.yml` (conda) pinned to versions that have been tested on macOS — tell me which format you prefer.
