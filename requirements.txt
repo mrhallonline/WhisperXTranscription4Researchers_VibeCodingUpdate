@@ -1,0 +1,39 @@
+# requirements.txt for WhisperXTranscription4Researchers
+# Note: On macOS, pick the correct PyTorch wheel for your system (CPU vs MPS) from https://pytorch.org/get-started/locally/
+# If you install PyTorch from the wheel recommended on pytorch.org, you can still use this file for the rest of the packages.
+
+# Core pinned versions (known-to-work baseline)
+numpy==1.26.3
+whisperx==3.2.0
+
+# PyTorch (pin to a specific version here if you want exact reproducibility).
+# For macOS you may prefer to install torch via the wheel from pytorch.org rather than pip installing from this file.
+# Example pinned set used in the notebook for CUDA systems (Windows/Linux):
+# torch==2.3.0
+# torchvision==0.18.0
+# torchaudio==2.3.0
+
+# Auxiliary dependencies
+speechbrain
+ipykernel
+ipywidgets
+charset-normalizer
+pandas
+nltk
+plotly
+matplotlib
+webvtt-py
+pypi-json
+srt
+python-dotenv
+tqdm
+
+# Optional: add pyannote if you plan to run diarization locally via pyannote
+# pyannote.audio>=3.0.0
+
+# Notes:
+# - Install/upgrade pip before using this file: python3 -m pip install --upgrade pip
+# - To install using this file (excluding PyTorch wheel selection):
+#     python3 -m pip install -r requirements.txt
+# - If you want a fully pinned environment for macOS (including the exact PyTorch wheel), I can generate a
+#   platform-specific install snippet or environment.yml (conda) that pins everything including pyannote.

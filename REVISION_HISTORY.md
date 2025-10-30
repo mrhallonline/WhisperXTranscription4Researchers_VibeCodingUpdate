@@ -75,3 +75,6 @@ else:
 - [ ] Implement batch size optimization based on available memory
 - [ ] Add progress bars for long-running transcriptions
 - [ ] Support for custom model fine-tuning
+
+
+

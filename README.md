@@ -193,3 +193,102 @@ Notes:
 - After installing or changing packages, restart the Jupyter kernel before re-running the notebook.
 
 If you'd like, I can also create a `requirements.txt` or `environment.yml` (conda) pinned to versions that have been tested on macOS — tell me which format you prefer.
+
+### macOS Conda setup using requirements.txt
+=================================================
+
+The steps below use Conda plus this repo's `requirements.txt`. On macOS you should install PyTorch first (CPU or Apple Silicon/MPS) and then install the rest from `requirements.txt`.
+
+1. Install Homebrew (if needed) and FFMPEG
+
+```sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install ffmpeg
+```
+
+2. Install Miniconda (recommended)
+
+- Download from `https://docs.conda.io/en/latest/miniconda.html` and run the macOS installer.
+- After installation, open a new terminal so `conda` is on your PATH.
+
+3. Create and activate a Conda environment
+
+```sh
+conda create -n whisperxtranscription-env python=3.10 -y
+conda activate whisperxtranscription-env
+python -m pip install --upgrade pip
+```
+
+4. Install PyTorch (macOS)
+
+- CPU-only (works on Intel or Apple Silicon):
+
+```sh
+python -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+```
+
+- Apple Silicon with MPS acceleration: visit `https://pytorch.org/get-started/locally/` and choose macOS + pip to copy the exact command recommended for your system. That wheel enables MPS on Apple Silicon.
+
+5. Install the rest of the dependencies from requirements.txt
+
+```sh
+python -m pip install -r requirements.txt
+```
+
+6. (Optional) Register the Conda env as a Jupyter kernel
+
+```sh
+python -m ipykernel install --user --name whisperxtranscription-env --display-name "Python (whisperxtranscription-env)"
+```
+
+7. Add your Hugging Face token to a `.env` file next to the notebook
+
+```ini
+HF_TOKEN="REPLACEWITHHUGGINGFACETOKENHERE"
+```
+
+8. Verify PyTorch and device availability
+
+```sh
+python - << 'PY'
+import torch
+print('torch', torch.__version__)
+print('CUDA available:', torch.cuda.is_available())
+print('MPS available:', hasattr(torch.backends, 'mps') and torch.backends.mps.is_available())
+PY
+```
+
+Notes:
+- If you change packages, restart the Jupyter kernel before re-running the notebook.
+- For diarization with pyannote, you need a free Hugging Face token.
+
+### Troubleshooting on macOS: PyAV build errors with FFmpeg 7
+=================================================
+
+Symptom: Installing dependencies triggers a build failure for `av` with errors mentioning `AV_OPT_TYPE_CHANNEL_LAYOUT` vs `AV_OPT_TYPE_CHLAYOUT`. This is caused by compiling PyAV 11 against FFmpeg 7 headers.
+
+Fix (use FFmpeg 6 with PyAV 11):
+
+```sh
+# Inside your conda env
+conda remove -y av pyav ffmpeg
+conda install -y -c conda-forge "ffmpeg<7" "pyav==11.*" pkg-config
+
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+If `pip` still attempts to build `av` from source, force a wheel:
+
+```sh
+python -m pip install --only-binary=:all: "av==11.*"
+```
+
+Alternative via Homebrew (if you prefer system FFmpeg):
+
+```sh
+brew install pkg-config ffmpeg
+python -m pip install --upgrade pip
+python -m pip install --only-binary=:all: "av==11.*"
+python -m pip install -r requirements.txt
+```
